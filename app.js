@@ -15,7 +15,7 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24,
     },
     store: new MongoStore({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/rhtimes",
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/hrtimes",
       ttl: 60 * 60 * 24,
     }),
   })
