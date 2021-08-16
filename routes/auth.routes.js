@@ -29,23 +29,23 @@ router.post("/signup", (req, res) => {
     !interests
   ) {
     res.status(500).json({
-      errorMessage: "Please enter all fields",
+      error: "Please enter all fields",
     });
 
     return;
   }
 
-  // const myRegex = new RegExp(
-  //   /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
-  // );
+  const myRegex = new RegExp(
+    /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
+  );
 
-  // if (!myRegex.test(email)) {
-  //   res.status(500).json({
-  //     errorMessage: "Email format not correct",
-  //   });
+  if (!myRegex.test(email)) {
+    res.status(500).json({
+      error: "Email format not correct",
+    });
 
-  //   return;
-  // }
+    return;
+  }
 
   // const myPassRegex = new RegExp(
   //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
@@ -82,12 +82,12 @@ router.post("/signup", (req, res) => {
     .catch((err) => {
       if (err.code === 11000) {
         res.status(500).json({
-          errorMessage: "Username or email entered already exists!",
+          error: "Username or email entered already exists!",
           message: err,
         });
       } else {
         res.status(500).json({
-          errorMessage: "Something went wrong! Go to sleep!",
+          error: "Something went wrong! Go to sleep!",
           message: err,
         });
       }
@@ -96,7 +96,7 @@ router.post("/signup", (req, res) => {
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
+
   if (!email || !password) {
     res.status(500).json({
       error: "Please enter username. email and password",
@@ -104,15 +104,15 @@ router.post("/signin", (req, res) => {
     return;
   }
 
-  // const myRegex = new RegExp(
-  //   /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
-  // );
-  // if (!myRegex.test(email)) {
-  //   res.status(500).json({
-  //     error: "Please enter a correct email format",
-  //   });
-  //   return;
-  // }
+  const myRegex = new RegExp(
+    /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
+  );
+  if (!myRegex.test(email)) {
+    res.status(500).json({
+      error: "Please enter a correct email format",
+    });
+    return;
+  }
 
   UserModel.findOne({ email })
     .then((userData) => {
@@ -171,7 +171,10 @@ router.get("/profile", isLoggedIn, (req, res, next) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      console.log(err);
+      res.status(500).json({
+        error: "User couldn't found",
+        message: err,
+      });
     });
 });
 

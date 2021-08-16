@@ -4,7 +4,9 @@ const uploader = require("../middlewares/cloudinary.config");
 
 router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
   if (!req.file) {
-    next(new Error("No file uploaded!"));
+    res.status(500).json({
+      error: "Image upload failed"
+    });
     return;
   }
   res.status(200).json({ image: req.file.path });
