@@ -1,5 +1,5 @@
 {
-  "name": "rhtimes-server",
+  "name": "hrtimes-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,16 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.26.2",
-    "connect-mongo": "^4.4.1",
+    "cloudinary": "^1.26.3",
+    "connect-mongo": "^4.5.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
-    "mongoose": "^5.13.3",
+    "mongoose": "^5.13.8",
     "morgan": "^1.10.0",
-    "multer": "^1.4.2",
+    "multer": "^1.4.3",
     "multer-storage-cloudinary": "^4.0.0",
     "react-google-login": "^5.2.2"
   },
