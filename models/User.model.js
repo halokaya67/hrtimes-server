@@ -31,24 +31,30 @@ const userSchema = new Schema({
   interests: {
     type: Array,
   },
-  articles: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Article",
-    },
-  ],
-  comments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-    },
-  ],
-  following: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  articles: [{
+    type: Schema.Types.ObjectId,
+    ref: "Article",
+  }],
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: "Comment",
+  }],
+  following: [{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  }],
+  favorites: [{
+    type: Schema.Types.ObjectId,
+    ref: "Article"
+  }],
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: "Article"
+  }],
+  dislikes: [{
+    type: Schema.Types.ObjectId,
+    ref: "Article"
+  }],
   googleId: String,
 });
 

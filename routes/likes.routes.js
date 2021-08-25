@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ArticleModel = require("../models/Article.model");
+const UserModel = require("../models/User.model");
 
 router.post("/article/:id/incLike", (req, res, next) => {
   const { id } = req.params;
@@ -61,6 +62,7 @@ router.post("/article/:id/fav", (req, res, next) => {
   const { _id } = req.session.loggedInUser;
   ArticleModel.findByIdAndUpdate(id, { $push: { favorites: _id } }, { new: true })
     .then((article) => {
+
       res.status(200).json(article);
     })
     .catch((err) => {

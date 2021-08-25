@@ -8,8 +8,9 @@ router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
       error: "Image upload failed"
     });
     return;
+  } else {
+    res.status(200).json({ image: req.file.path });
   }
-  res.status(200).json({ image: req.file.path });
 });
 
 module.exports = router;

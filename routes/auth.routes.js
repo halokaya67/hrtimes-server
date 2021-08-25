@@ -3,7 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const UserModel = require("../models/User.model");
 
+// Handling SIGNUP route
 router.post("/signup", (req, res) => {
+  // Destructuring data from body
   const {
     username,
     firstName,
@@ -18,6 +20,7 @@ router.post("/signup", (req, res) => {
     articles,
   } = req.body;
 
+  // Throwing an error if one of the data is missing
   if (
     !username ||
     !email ||
@@ -26,19 +29,21 @@ router.post("/signup", (req, res) => {
     !lastName ||
     !city ||
     !country ||
-    !interests
+    !image ||
+    interests.length === 0
   ) {
     res.status(500).json({
       error: "Please enter all fields",
     });
-
     return;
   }
 
+  // Checking the email structure
   const myRegex = new RegExp(
     /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
   );
 
+  // Throwing an error if the email structure is not correct
   if (!myRegex.test(email)) {
     res.status(500).json({
       error: "Email format not correct",
@@ -47,6 +52,7 @@ router.post("/signup", (req, res) => {
     return;
   }
 
+  // Checking the password structure
   // const myPassRegex = new RegExp(
   //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
   // );
@@ -58,9 +64,11 @@ router.post("/signup", (req, res) => {
   //   return;
   // }
 
+  // Creating a hashed password
   let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(passwordHash, salt);
 
+  // Creating a user with the data above
   UserModel.create({
     username,
     firstName,
@@ -74,39 +82,48 @@ router.post("/signup", (req, res) => {
     comments,
     articles,
   })
+    // Creating a session with the user data
     .then((user) => {
       user.passwordHash = "***";
       req.session.loggedInUser = user;
       res.status(200).json(user);
     })
+    // Handling the error
     .catch((err) => {
+      // Throwing an error if email isn't unique
       if (err.code === 11000) {
         res.status(500).json({
           error: "Username or email entered already exists!",
           message: err,
         });
       } else {
+        // Throwing an error if user can't created
         res.status(500).json({
-          error: "Something went wrong! Go to sleep!",
+          error: "User couldn't created!",
           message: err,
         });
       }
     });
 });
 
+// Handling SIGNIN route
 router.post("/signin", (req, res) => {
+  // Destructuring data from body
   const { email, password } = req.body;
 
+  // Throwing an error if data is missing
   if (!email || !password) {
     res.status(500).json({
-      error: "Please enter username. email and password",
+      error: "Please enter your email and password",
     });
     return;
   }
 
+  // Checking the email structure
   const myRegex = new RegExp(
     /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
   );
+  // Throwing an error if the email structure is not correct
   if (!myRegex.test(email)) {
     res.status(500).json({
       error: "Please enter a correct email format",
@@ -114,10 +131,12 @@ router.post("/signin", (req, res) => {
     return;
   }
 
+  // Finding the details of the user
   UserModel.findOne({ email })
     .then((userData) => {
-      bcrypt
-        .compare(password, userData.passwordHash)
+      // Checking if the password matches
+      bcrypt.compare(password, userData.passwordHash)
+        // Creating a session with the user data if it matches
         .then((doesItMatch) => {
           if (doesItMatch) {
             userData.passwordHash = "***";
